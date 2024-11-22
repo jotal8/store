@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { Product } from '../models/product.model';
 
 @Injectable({
@@ -11,7 +11,15 @@ export class ProductService {
 
   constructor() { }
 
-  getProducts() {
-    return this.http.get<Product[]>('https://api.escuelajs.co/api/v1/products');
+  getProducts(category_id: number) {
+    const url = new URL(`https://api.escuelajs.co/api/v1/products`);
+    if (category_id > 0) {
+      url.searchParams.set('categoryId', category_id.toString());
+    }
+    return this.http.get<Product[]>(url.toString());
+  }
+
+  getOne(id: string) {
+    return this.http.get<Product>(`https://api.escuelajs.co/api/v1/products/${id}`);
   }
 }
